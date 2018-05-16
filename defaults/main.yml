@@ -1,0 +1,17 @@
+---
+distance_matrix_version: "master"
+distance_matrix_url: "https://github.com/pdlotko/topological_pipelines_for_porous_materials"
+
+distance_matrix_code_folder: "{{ ansible_env.HOME }}"
+distance_matrix_src: "distance_matrix"
+distance_matrix_topdir: "{{ distance_matrix_code_folder }}/{{distance_matrix_src}}"
+
+distance_matrix_executables:
+- name: subsample_pore_surface
+  folder: "{{ distance_matrix_topdir }}"
+- name: create_megacell
+  folder: "{{ distance_matrix_topdir }}"
+- name: compute_Rips_persistence_periodic_domain
+  folder: "{{ distance_matrix_topdir }}"
+
+root_user: root

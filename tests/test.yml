@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  roles:
+  - role: distance-matrix
+    vars:
+      cloud_platform: docker

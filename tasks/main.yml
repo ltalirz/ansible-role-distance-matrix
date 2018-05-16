@@ -1,0 +1,48 @@
+---
+- name: Get distance_matrix code code from github
+  git:
+    repo: "{{ distance_matrix_url }}"
+    dest: "{{ distance_matrix_topdir }}"
+    version: "{{ distance_matrix_version }}"
+
+- name: install packages
+  become: True
+  become_user: "{{ root_user }}"
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - gcc
+
+- name: distance_matrix - make
+  make:
+    chdir: "{{ distance_matrix_topdir }}"
+  register: distance_matrix_make
+
+#- name: distance_matrix tests
+#  import_tasks: tests.yml
+#  when: distance_matrix_make.changed and run_tests is defined and run_tests
+
+- name: "Put a line in ~/.profile to add binaries to the path"
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.profile"
+    line: "export PATH=${PATH}:{{ distance_matrix_topdir }}"
+
+- import_role:
+    name: release_notes
+  vars:
+    section: "distance_matrix"
+    option: "version"
+    value: "{{ distance_matrix_version }}"
+  when: release_notes
+
+
+- import_role:
+    name: release_notes
+  vars:
+    section: "distance_matrix"
+    option: "usage"
+    value: >-
+        distance_matrix is installed in {{ distance_matrix_topdir }}.
+        Binaries have been added to the PATH
+  when: release_notes
